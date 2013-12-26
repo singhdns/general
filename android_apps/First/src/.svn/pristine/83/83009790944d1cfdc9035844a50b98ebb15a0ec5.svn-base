@@ -1,0 +1,50 @@
+package com.example.first;
+
+import java.util.List;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MyArrayAdapter extends ArrayAdapter<Comment> {
+	  private final Context context;
+	  private final List<Comment> values;
+
+	  public MyArrayAdapter(Context context, List<Comment> values) {
+	    super(context, R.layout.rowlayout, values);
+	    this.context = context;
+	    this.values = values;
+	  }
+
+	  @Override
+	  public View getView(int position, View convertView, ViewGroup parent) {
+	    LayoutInflater inflater = (LayoutInflater) context
+	        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	    View rowView = inflater.inflate(R.layout.rowlayout, parent, false);
+	    TextView textView_remote = (TextView) rowView.findViewById(R.id.firstLine);
+	    TextView textView_local = (TextView) rowView.findViewById(R.id.secondLine);
+	    TextView textView_third = (TextView) rowView.findViewById(R.id.thirdLine);
+	    
+	    
+	    textView_remote.setText(values.get(position).getRemoteDir());
+	    textView_local.setText(values.get(position).getLocalDir());
+	    Button button = (Button) rowView.findViewById(R.id.buttonDeleteRecord) ;
+	    button.setText("delete" + position);
+	    button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	android.util.Log.i("button delete pressed","You pressed button delete"   + ((Button) v).getText().toString());
+                //browse(v) ;
+           }
+        });
+	    
+
+	    return rowView;
+	  }
+
+}
