@@ -26,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 public class MainActivity extends Activity {
     private static int FILE_BROWSER_CODE = 100 ;
@@ -48,7 +49,7 @@ public class MainActivity extends Activity {
 		final Button button = (Button) findViewById(R.id.buttonExecute);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                 browse(v) ;
+            	testGoogleService(v) ;
             }
         });
         
@@ -181,6 +182,19 @@ public class MainActivity extends Activity {
 
 	  }	 	
 	  
+	public String testGoogleService(View v) {
+			// Inflate the menu; this adds items to the action bar if it is present.
+			//getMenuInflater().inflate(R.menu.main, menu);
+	    	//Intent i = new Intent(this , SettingsActivity.class);
+	    	//startActivity(i); 
+		//if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext()){
+			 ;
+		//    log_view.append("available: " + GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext()));
+		//}else{
+			log_view.append("not available: " + GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext()));
+		//}
+		return "test";
+	}	  
 	public String startPreferences(View v) {
 			// Inflate the menu; this adds items to the action bar if it is present.
 			//getMenuInflater().inflate(R.menu.main, menu);
