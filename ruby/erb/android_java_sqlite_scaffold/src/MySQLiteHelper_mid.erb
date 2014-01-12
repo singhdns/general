@@ -1,0 +1,16 @@
+          public static final String <%= Config_setup["Name"] %>s_TABLE_NAME  = "<%= Config_setup["Name"] %>s";
+	  public void CreateTable<%= Config_setup["Name"] %>s(SQLiteDatabase database) {
+		    database.execSQL(   "create table <%= Config_setup["Name"] %>s" + "(" 
+		                                                             + COLUMN_ID  + " integer primary key autoincrement, " 
+                                                                                 <% Config_setup["field"].each_key do |key| %>
+		                                                             + "COLUMN_<%= key %>  text not null, "
+                                                                                 <% end %>
+	                                                                     + COLUMN_DATE + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL"
+	                                                               + ");"
+                                    );
+	  }	 
+	  
+	  public void DeleteTable<%= Config_setup["Name"] %>(SQLiteDatabase database) {
+		    database.execSQL("DROP TABLE IF EXISTS <%= Config_setup["Name"] %>s");
+	  }	  
+	  

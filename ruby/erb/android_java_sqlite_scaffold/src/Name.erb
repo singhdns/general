@@ -1,0 +1,38 @@
+package <%= Config_setup["package_name_dot"] %>;
+
+public class <%= Config_setup["Name"] %> {
+	private long id;
+	private String date="NULL";	
+<% Config_setup["field"].each_key do |key| %>
+	private <%= Config_setup["field"][key]["type"] %> <%= key %> = "<%= Config_setup["field"][key]["default"]%>";
+<% end %>	
+	
+	  public long getId() {
+	    return id;
+	  }
+
+	  public void setId(long id) {
+	    this.id = id;
+	  }
+
+<% Config_setup["field"].each_key do |key| %>
+	  public <%= Config_setup["field"][key]["type"] %> get<%= key %>() {
+	    return <%= key %>;
+	  }
+
+	  public void set<%= key %>(String <%= key %>) {
+	    this.<%= key %> = <%= key %>;
+	  }
+<% end %>	
+
+	  public String getDate() {
+		  return date;
+	  }	  
+	  // Will be used by the ArrayAdapter in the ListView
+	  @Override
+	  public String toString() {
+	    return <%= Config_setup["string_value"] %> + ":" + date;
+	  }
+	
+	
+}

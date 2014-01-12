@@ -1,0 +1,104 @@
+package <%= Config_setup["package_name_dot"] %>;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+
+public class <%= Config_setup["Name"] %>sDataSource {
+	// Database fields
+	  private SQLiteDatabase database;
+	  private MySQLiteHelper dbHelper;
+	  private String[] allColumns = { 
+			                     MySQLiteHelper.COLUMN_ID,
+<% Config_setup["field"].each_key do |key| %>
+	                                     "COLUMN_<%= key %>",
+<% end %>
+	                                     MySQLiteHelper.COLUMN_DATE
+	                                };
+
+	  
+	  public <%= Config_setup["Name"] %>sDataSource(Context context) {
+	    dbHelper = new MySQLiteHelper(context);
+	  }
+
+	  public void open() throws SQLException {
+	    database = dbHelper.getWritableDatabase();
+	  }
+
+	  public void close() {
+	    dbHelper.close();
+	  }
+
+	  public <%= Config_setup["Name"] %> create<%= Config_setup["Name"] %>(<%= Config_setup["Name"] %> item) { //item passed over here may just have any id, only the other columns will be taken from this and a new row will be created
+	    ContentValues values = new ContentValues();
+<% Config_setup["field"].each_key do |key| %>
+	    values.put("COLUMN_<%= key %>",item.get<%= key %>() );
+<% end %>
+	    android.util.Log.i("<%= Config_setup["Name"] %>DataSource","started inserting item in table");   
+	    long insertId = database.insert("<%= Config_setup["Name"] %>s", null,
+	        values);
+	    android.util.Log.i("<%= Config_setup["Name"] %>sDataSource","Finished inserting item in table");      
+	    Cursor cursor = database.query(MySQLiteHelper.<%= Config_setup["Name"] %>s_TABLE_NAME,
+	        allColumns, MySQLiteHelper.COLUMN_ID + " = " + insertId, null,
+	        null, null, null);
+	    cursor.moveToFirst();
+	    <%= Config_setup["Name"] %> newItem = cursorTo<%= Config_setup["Name"] %>(cursor);
+	    cursor.close();
+	    return newItem;
+	  }
+
+	  public Place get<%= Config_setup["Name"] %>Object(long id) {
+		    System.out.println("getting comment object corresponding to id: " + id);
+		    android.util.Log.i("<%= Config_setup["Name"] %>sDataSource","getting comment object corresponding to comment id");      
+		    Cursor cursor = database.query(MySQLiteHelper.<%= Config_setup["Name"] %>s_TABLE_NAME,
+		        allColumns, MySQLiteHelper.COLUMN_ID + " = " + id, null,
+		        null, null, null);
+		    cursor.moveToFirst();
+		    <%= Config_setup["Name"] %> newItem = cursorTo<%= Config_setup["Name"] %>(cursor);
+		    cursor.close();
+		    return newItem;		    
+
+	  }
+	  
+	  public void delete<%= Config_setup["Name"] %>(<%= Config_setup["Name"] %> item) {
+	    long id = item.getId();
+	    System.out.println("item deleted with id: " + id);
+	    database.delete(MySQLiteHelper.<%= Config_setup["Name"] %>s_TABLE_NAME, MySQLiteHelper.COLUMN_ID
+	        + " = " + id, null);
+	  }
+
+	  public List<Place> getAll<%= Config_setup["Name"] %>s() {
+	    List<<%= Config_setup["Name"] %>> items = new ArrayList<<%= Config_setup["Name"] %>>();
+
+	    Cursor cursor = database.query(MySQLiteHelper.<%= Config_setup["Name"] %>s_TABLE_NAME,
+	        allColumns, null, null, null, null, null);
+
+	    cursor.moveToFirst();
+	    while (!cursor.isAfterLast()) {
+	      <%= Config_setup["Name"] %> item = cursorTo<%= Config_setup["Name"] %>(cursor);
+	      items.add(item);
+	      cursor.moveToNext();
+	    }
+	    // make sure to close the cursor
+	    cursor.close();
+	    return items;
+	  }
+
+	  private <%= Config_setup["Name"] %> cursorTo<%= Config_setup["Name"] %>(Cursor cursor) {
+	    <%= Config_setup["Name"] %> item = new <%= Config_setup["Name"] %>();
+	    item.setId(cursor.getLong(0));
+<% i = 0 %>
+<% Config_setup["field"].each_key do |key| %>
+	    item.set<%= key %>(cursor.getString(<%= i%>));
+<% i = i + 1 %>
+<% end %>
+	    return item;
+	  }
+	
+	
+	
+}

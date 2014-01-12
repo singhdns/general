@@ -1,0 +1,109 @@
+package <%= Config_setup["package_name_dot"] %>;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.content.Intent;
+import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Toast;
+
+public class Setup<%= Config_setup["Name"] %>sActivity extends Activity {
+	private <%= Config_setup["Name"] %>sDataSource datasource;
+	private <%= Config_setup["Name"] %> item = null;
+	private String request_type = "add" ;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_setup_<%= Config_setup["Name"].downcase %>);
+
+
+		Button buttonSave = (Button) findViewById(R.id.<%= Config_setup["Name"] %>_buttonSaveItemSetup);
+		buttonSave.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                 
+            	finish();
+            }
+        });		
+
+		Button buttonCancel = (Button) findViewById(R.id.<%= Config_setup["Name"] %>_buttonCancelItemSetup);
+		buttonCancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                
+            	finish_without_result();
+            }
+        });	
+		
+<% Config_setup["field"].each_key do |key| %>
+		EditText editText<%= key %> = (EditText) findViewById(R.id.editText<%= key %>);
+<% end %>
+		Bundle extras = getIntent().getExtras();
+		
+		
+	    datasource = new <%= Config_setup["Name"] %>sDataSource(this);
+	    datasource.open();
+	    
+		if (extras != null) {
+		    if (extras.containsKey("old_id")) {
+		    	android.util.Log.i("SetupDirPairActivity","getting data from bundle");
+		    	long id = extras.getLong("old_id");
+		    	item = datasource.get<%= Config_setup["Name"] %>Object(id);
+		    }
+		    
+		}
+		
+		if(item == null){
+			android.util.Log.i("Setup<%= Config_setup["Name"] %>Activity","this is request for addition, no action is required");
+		}else{
+			this.request_type = "delete" ;
+			android.util.Log.i("Setup<%= Config_setup["Name"] %>Activity","this is request for modification");
+<% Config_setup["field"].each_key do |key| %>
+			editText<%= key %>.setText(item.get<%= key %>()) ;
+<% end %>
+		}
+		
+		
+	}
+	
+	
+	
+	@Override
+	public void finish() {
+		
+<% Config_setup["field"].each_key do |key| %>
+		EditText editText<%= key %> = (EditText) findViewById(R.id.editText<%= key %>);
+		item.set<%= key %>(editText<%= key %>.getText().toString()) ;
+<% end %>
+		item = new <%= Config_setup["Name"] %>();
+		<%= Config_setup["Name"] %> new_item = datasource.create<%= Config_setup["Name"] %>(item);
+		
+	  // Prepare data intent 
+	  Intent data = new Intent();
+	  if ( this.request_type == "delete"){
+	    data.putExtra("deleted", "yes");
+	  }
+	  data.putExtra("new_id", new_item.getId());
+	  // Activity finished ok, return the data
+	  setResult(RESULT_OK, data);
+	  android.util.Log.i("SetupDirPairActivity","finishing the setup dir activity and passing the result");
+	  datasource.close();
+	  super.finish();
+	} 
+
+	
+	public void finish_without_result() {
+
+	  super.finish();
+	} 
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		//getMenuInflater().inflate(R.menu.setup_dir_pair, menu);
+		return true;
+	}
+
+}
