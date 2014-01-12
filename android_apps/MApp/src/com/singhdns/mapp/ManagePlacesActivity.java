@@ -23,13 +23,13 @@ public class ManagePlacesActivity extends ListActivity {
 	  private PlacesDataSource datasource;
 	  private SQLiteDatabase database;
 	  private MySQLiteHelper dbHelper;
-	  public static final String TABLE_PLACES       = "places";
+	  public static final String TABLE_NAME       = "Places";
 	  private static int ADD_MODIFY_DATABSE = 101 ;
 	  public int currently_clicked_position ;
 	  @Override
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    setContentView(R.layout.activity_manage_place);
+	    setContentView(R.layout.activity_manage_places);
 
 	    datasource = new PlacesDataSource(this);
 	    datasource.open();
@@ -40,7 +40,7 @@ public class ManagePlacesActivity extends ListActivity {
 	    // elements in a ListView
 	    ArrayAdapter<Place> adapter = new ArrayAdapter<Place>(this,
 	            //android.R.layout.simple_list_item_multiple_choice, values);
-	            R.layout.simple_list_item_single_choice, values);
+	            R.layout.simple_list_item_multiple_choice_place, values);
 	    setListAdapter(adapter);
 	    getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE) ;
    
@@ -131,13 +131,13 @@ public class ManagePlacesActivity extends ListActivity {
 		  
 		  @SuppressWarnings("unchecked")
 	    	ArrayAdapter adapter = (ArrayAdapter) getListAdapter(); 
-		  Place place = null;
+		  Place item = null;
 		  
 
-			    	       place = (Place) getListAdapter().getItem(this.currently_clicked_position);
+			    	       item = (Place) getListAdapter().getItem(this.currently_clicked_position);
 
 						   Intent data = new Intent(this , SetupPlacesActivity.class);
-						   data.putExtra("old_id", place.getId());
+						   data.putExtra("old_id", item.getId());
 						   startActivityForResult(data,ADD_MODIFY_DATABSE);
 
 
@@ -146,16 +146,16 @@ public class ManagePlacesActivity extends ListActivity {
 		  @SuppressWarnings("unchecked")
 	    	
 	    	ArrayAdapter adapter = (ArrayAdapter) getListAdapter(); 
-		  Place place = null;
+		  Place item = null;
 		      if (getListAdapter().getCount() > 0) {
-			        //place = (Place) getListAdapter().getItem(0);
+			        //item = (Place) getListAdapter().getItem(0);
 			    	  int len = getListView().getCount();
 			    	  SparseBooleanArray checked = getListView().getCheckedItemPositions();
 			    	  for (int i = 0; i < len; i++)
 			    	   if (checked.get(i)) {
-			    	       place = (Place) getListAdapter().getItem(i);
-			    	       datasource.deletePlace(place);
-			    	       adapter.remove(place);
+			    	       item = (Place) getListAdapter().getItem(i);
+			    	       datasource.deletePlace(item);
+			    	       adapter.remove(item);
 			    	   }	    	  
 			      }	    	    	
 	    	
@@ -172,7 +172,7 @@ public class ManagePlacesActivity extends ListActivity {
 		  
 		  dbHelper = new MySQLiteHelper(this);
 		  database = dbHelper.getWritableDatabase();
-		  database.execSQL("DROP TABLE IF EXISTS " + TABLE_PLACES);
+		  database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
 
 	    	Toast.makeText(ManagePlacesActivity.this, "Entire table is deleted, next time you come here you will not see any entries", 
                          Toast.LENGTH_SHORT).show();	
@@ -186,9 +186,9 @@ public class ManagePlacesActivity extends ListActivity {
 	  public void onClick(View view) {
 	    @SuppressWarnings("unchecked")
 	    ArrayAdapter adapter = (ArrayAdapter) getListAdapter(); 
-	    Place place = null;
+	    Place item = null;
 	    switch (view.getId()) {
-	    case R.id.add:
+	    case R.id.add_Place:
 //			      String[] comments = new String[] { "Cool and dry cool and dry cool and dry cool and dry", "Very nice", "Hate it" };
 //			      int nextInt = new Random().nextInt(3);
 //			      // save the new comment to the database
@@ -203,7 +203,7 @@ public class ManagePlacesActivity extends ListActivity {
 			      
 			      
 			      break;
-	    case R.id.delete:
+	    case R.id.delete_Place:
 //			        //Put up the Yes/No message box
 //			    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
 //			    	builder
@@ -222,7 +222,7 @@ public class ManagePlacesActivity extends ListActivity {
 	                Toast.LENGTH_SHORT).show();		    	
 			      break;
 			      
-	    case R.id.modify:
+	    case R.id.modify_Place:
 	    	
 //		      if (getListAdapter().getCount() > 0) {
 //			        //comment = (Comment) getListAdapter().getItem(0);
@@ -258,7 +258,7 @@ public class ManagePlacesActivity extends ListActivity {
                 Toast.LENGTH_SHORT).show();	
 	      break;
 	      
-	    case R.id.deleteTable:
+	    case R.id.deleteTable_Place:
 	    	
 //		        //Put up the Yes/No message box
 //		    	builder = new AlertDialog.Builder(this);
@@ -288,15 +288,15 @@ public class ManagePlacesActivity extends ListActivity {
 		protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 			@SuppressWarnings("unchecked")
 			ArrayAdapter adapter = (ArrayAdapter) getListAdapter(); 
-		    Place place = null;
+		    Place item = null;
 			  if (resultCode == RESULT_OK && requestCode == ADD_MODIFY_DATABSE) {
 				    if (data.hasExtra("deleted")) {
 				    	deleteEntryWithPosition();
 				    }
 				    if (data.hasExtra("new_id")) {
 				    	  datasource.open() ;
-					      place = datasource.getPlaceObject(data.getExtras().getLong("new_id"));
-					      adapter.add(place);
+					      item = datasource.getPlaceObject(data.getExtras().getLong("new_id"));
+					      adapter.add(item);
 					}
 				    adapter.notifyDataSetChanged();
 			  }

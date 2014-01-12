@@ -12,17 +12,16 @@ import android.widget.Toast;
 
 public class SetupPlacesActivity extends Activity {
 	private PlacesDataSource datasource;
-	private Place place = null;
+	private Place item = null;
 	private String request_type = "add" ;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_setup_place);
-	
 
 
-		Button buttonSave = (Button) findViewById(R.id.buttonSave);
+		Button buttonSave = (Button) findViewById(R.id.Place_buttonSaveItemSetup);
 		buttonSave.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                  
@@ -30,7 +29,7 @@ public class SetupPlacesActivity extends Activity {
             }
         });		
 
-		Button buttonCancel = (Button) findViewById(R.id.buttonCancelDataSetup);
+		Button buttonCancel = (Button) findViewById(R.id.Place_buttonCancelItemSetup);
 		buttonCancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 
@@ -38,12 +37,13 @@ public class SetupPlacesActivity extends Activity {
             }
         });	
 		
-		EditText editTextDate = (EditText) findViewById(R.id.editTextDate);
-		EditText editTextLatLng = (EditText) findViewById(R.id.editTextLatLng);
-		EditText editTextOtherCommands = (EditText) findViewById(R.id.editTextOtherCommands);
-		EditText editTextComments = (EditText) findViewById(R.id.editTextComments);
 
-		
+		EditText editTextcomment = (EditText) findViewById(R.id.editTextcomment);
+
+		EditText editTextLatLng = (EditText) findViewById(R.id.editTextLatLng);
+
+		EditText editTextOtherCommands = (EditText) findViewById(R.id.editTextOtherCommands);
+
 		Bundle extras = getIntent().getExtras();
 		
 		
@@ -54,20 +54,23 @@ public class SetupPlacesActivity extends Activity {
 		    if (extras.containsKey("old_id")) {
 		    	android.util.Log.i("SetupDirPairActivity","getting data from bundle");
 		    	long id = extras.getLong("old_id");
-		    	place = datasource.getPlaceObject(id);
-			}
+		    	item = datasource.getPlaceObject(id);
+		    }
 		    
 		}
 		
-		if(place == null){
-			android.util.Log.i("SetupDirPairActivity","this is request for addition, no action is required");
+		if(item == null){
+			android.util.Log.i("SetupPlaceActivity","this is request for addition, no action is required");
 		}else{
 			this.request_type = "delete" ;
-			android.util.Log.i("SetupDirPairActivity","this is request for modification");
-			editTextLatLng.setText(place.getLatLng()) ;
-			editTextDate.setText(place.getDate()) ;
-			editTextOtherCommands.setText(place.getOtherCommands()) ;
-			editTextComments.setText(place.getComment()) ;		
+			android.util.Log.i("SetupPlaceActivity","this is request for modification");
+
+			editTextcomment.setText(item.getcomment()) ;
+
+			editTextLatLng.setText(item.getLatLng()) ;
+
+			editTextOtherCommands.setText(item.getOtherCommands()) ;
+
 		}
 		
 		
@@ -78,24 +81,25 @@ public class SetupPlacesActivity extends Activity {
 	@Override
 	public void finish() {
 		
-		EditText editTextLatLng = (EditText) findViewById(R.id.editTextLatLng);
-		EditText editTextOtherCommands = (EditText) findViewById(R.id.editTextOtherCommands);
-		EditText editTextComment = (EditText) findViewById(R.id.editTextComments);
 
-		
-		place = new Place();
-		 
-		place.setLatLng(editTextLatLng.getText().toString()) ;
-		place.setOtherCommands(editTextOtherCommands.getText().toString());
-		place.setComment(editTextComment.getText().toString());       
-		Place new_place = datasource.createPlace(place);
+		EditText editTextcomment = (EditText) findViewById(R.id.editTextcomment);
+		item.setcomment(editTextcomment.getText().toString()) ;
+
+		EditText editTextLatLng = (EditText) findViewById(R.id.editTextLatLng);
+		item.setLatLng(editTextLatLng.getText().toString()) ;
+
+		EditText editTextOtherCommands = (EditText) findViewById(R.id.editTextOtherCommands);
+		item.setOtherCommands(editTextOtherCommands.getText().toString()) ;
+
+		item = new Place();
+		Place new_item = datasource.createPlace(item);
 		
 	  // Prepare data intent 
 	  Intent data = new Intent();
 	  if ( this.request_type == "delete"){
 	    data.putExtra("deleted", "yes");
 	  }
-	  data.putExtra("new_id", new_place.getId());
+	  data.putExtra("new_id", new_item.getId());
 	  // Activity finished ok, return the data
 	  setResult(RESULT_OK, data);
 	  android.util.Log.i("SetupDirPairActivity","finishing the setup dir activity and passing the result");

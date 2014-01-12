@@ -13,11 +13,15 @@ public class PlacesDataSource {
 	  private SQLiteDatabase database;
 	  private MySQLiteHelper dbHelper;
 	  private String[] allColumns = { 
-			                             MySQLiteHelper.COLUMN_ID,
-	                                     MySQLiteHelper.COLUMN_COMMENT, 
-	                                     MySQLiteHelper.COLUMN_LATLNG,
-	                                     MySQLiteHelper.COLUMN_DATE,
-	                                     MySQLiteHelper.COLUMN_OTHERCOMMANDS                                     
+			                     MySQLiteHelper.COLUMN_ID,
+
+	                                     "COLUMN_comment",
+
+	                                     "COLUMN_LatLng",
+
+	                                     "COLUMN_OtherCommands",
+
+	                                     MySQLiteHelper.COLUMN_DATE
 	                                };
 
 	  
@@ -33,85 +37,80 @@ public class PlacesDataSource {
 	    dbHelper.close();
 	  }
 
-	  public Place createPlace(Place place) { //comment passed over here may just have any id, only the other columns will be taken from this and a new row will be created
+	  public Place createPlace(Place item) { //item passed over here may just have any id, only the other columns will be taken from this and a new row will be created
 	    ContentValues values = new ContentValues();
-	    values.put(MySQLiteHelper.COLUMN_COMMENT,place.getComment() );
-	    values.put(MySQLiteHelper.COLUMN_LATLNG,place.getComment() );
-	    values.put(MySQLiteHelper.COLUMN_OTHERCOMMANDS,place.getOtherCommands() );
-	    android.util.Log.i("placesDataSource","started inserting item in table");   
-	    android.util.Log.i("placesDataSource","values are = " + place.getComment() + ":" + place.getLatLng());   
-	    long insertId = database.insert(MySQLiteHelper.TABLE_PLACES, null,
+
+	    values.put("COLUMN_comment",item.getcomment() );
+
+	    values.put("COLUMN_LatLng",item.getLatLng() );
+
+	    values.put("COLUMN_OtherCommands",item.getOtherCommands() );
+
+	    android.util.Log.i("PlaceDataSource","started inserting item in table");   
+	    long insertId = database.insert("Places", null,
 	        values);
-	    android.util.Log.i("placesDataSource","Finished inserting item in table");      
-	    Cursor cursor = database.query(MySQLiteHelper.TABLE_PLACES,
+	    android.util.Log.i("PlacesDataSource","Finished inserting item in table");      
+	    Cursor cursor = database.query(MySQLiteHelper.Places_TABLE_NAME,
 	        allColumns, MySQLiteHelper.COLUMN_ID + " = " + insertId, null,
 	        null, null, null);
 	    cursor.moveToFirst();
-	    Place newPlace = cursorToPlace(cursor);
+	    Place newItem = cursorToPlace(cursor);
 	    cursor.close();
-	    return newPlace;
+	    return newItem;
 	  }
 
-//	  public Comment createComment(String comment) {
-//		    ContentValues values = new ContentValues();
-//		    values.put(MySQLiteHelper.COLUMN_COMMENT, comment);
-//		    
-//		    long insertId = database.insert(MySQLiteHelper.TABLE_COMMENTS, null,
-//		        values);
-//		    Cursor cursor = database.query(MySQLiteHelper.TABLE_COMMENTS,
-//		        allColumns, MySQLiteHelper.COLUMN_ID + " = " + insertId, null,
-//		        null, null, null);
-//		    cursor.moveToFirst();
-//		    Comment newComment = cursorToComment(cursor);
-//		    cursor.close();
-//		    return newComment;
-//		  }	  
-	  
 	  public Place getPlaceObject(long id) {
 		    System.out.println("getting comment object corresponding to id: " + id);
-		    android.util.Log.i("CommentsDataSource","getting comment object corresponding to comment id");      
-		    Cursor cursor = database.query(MySQLiteHelper.TABLE_PLACES,
+		    android.util.Log.i("PlacesDataSource","getting comment object corresponding to comment id");      
+		    Cursor cursor = database.query(MySQLiteHelper.Places_TABLE_NAME,
 		        allColumns, MySQLiteHelper.COLUMN_ID + " = " + id, null,
 		        null, null, null);
 		    cursor.moveToFirst();
-		    Place newPlace = cursorToPlace(cursor);
+		    Place newItem = cursorToPlace(cursor);
 		    cursor.close();
-		    return newPlace;		    
+		    return newItem;		    
 
 	  }
 	  
-	  public void deletePlace(Place place) {
-	    long id = place.getId();
-	    System.out.println("Comment deleted with id: " + id);
-	    database.delete(MySQLiteHelper.TABLE_PLACES, MySQLiteHelper.COLUMN_ID
+	  public void deletePlace(Place item) {
+	    long id = item.getId();
+	    System.out.println("item deleted with id: " + id);
+	    database.delete(MySQLiteHelper.Places_TABLE_NAME, MySQLiteHelper.COLUMN_ID
 	        + " = " + id, null);
 	  }
 
 	  public List<Place> getAllPlaces() {
-	    List<Place> places = new ArrayList<Place>();
+	    List<Place> items = new ArrayList<Place>();
 
-	    Cursor cursor = database.query(MySQLiteHelper.TABLE_PLACES,
+	    Cursor cursor = database.query(MySQLiteHelper.Places_TABLE_NAME,
 	        allColumns, null, null, null, null, null);
 
 	    cursor.moveToFirst();
 	    while (!cursor.isAfterLast()) {
-	      Place comment = cursorToPlace(cursor);
-	      places.add(comment);
+	      Place item = cursorToPlace(cursor);
+	      items.add(item);
 	      cursor.moveToNext();
 	    }
 	    // make sure to close the cursor
 	    cursor.close();
-	    return places;
+	    return items;
 	  }
 
 	  private Place cursorToPlace(Cursor cursor) {
-	    Place place = new Place();
-	    place.setId(cursor.getLong(0));
-	    place.setComment(cursor.getString(1));
-	    place.setLatLng(cursor.getString(2));
-	    place.setOtherCommands(cursor.getString(3));
+	    Place item = new Place();
+	    item.setId(cursor.getLong(0));
 
-	    return place;
+
+	    item.setcomment(cursor.getString(0));
+
+
+	    item.setLatLng(cursor.getString(1));
+
+
+	    item.setOtherCommands(cursor.getString(2));
+
+
+	    return item;
 	  }
 	
 	

@@ -9,31 +9,38 @@
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/add"
+            android:id="@+id/add_Place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add" 
             android:onClick="onClick"/>
 
         <Button
-            android:id="@+id/delete"
+            android:id="@+id/delete_Place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Delete" 
+            android:text="Del" 
             android:onClick="onClick"/>
 
         <Button
-            android:id="@+id/modify"
+            android:id="@+id/modify_Place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Modify" 
+            android:text="Mod" 
             android:onClick="onClick"/>  
                   
         <Button
-            android:id="@+id/deleteTable"
+            android:id="@+id/deleteTable_Place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DeleteTable" 
+            android:text="DelTbl" 
+            android:onClick="onClick"/>        
+ 
+        <Button
+            android:id="@+id/createTable_Place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NewTbl" 
             android:onClick="onClick"/>         
     </LinearLayout>
 

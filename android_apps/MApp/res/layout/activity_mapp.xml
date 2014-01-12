@@ -13,32 +13,51 @@
     android:name="com.google.android.gms.maps.MapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/buttonCurrPosition" />
+    android:layout_below="@+id/buttonManage" />
+
+<Button
+    android:id="@+id/buttonUnused"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignBaseline="@+id/buttonManage"
+    android:layout_alignBottom="@+id/buttonManage"
+    android:layout_alignRight="@+id/map"
+    android:text="NA" />
+
+<Button
+    android:id="@+id/buttonManage"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_marginTop="66dp"
+    android:layout_toLeftOf="@+id/buttonUnused"
+    android:text="Manage" />
+
+<EditText
+    android:id="@+id/editText1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@+id/buttonSave"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:ems="10"
+    android:inputType="textMultiLine" />
 
 <Button
     android:id="@+id/buttonSave"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_alignBaseline="@+id/buttonCurrPosition"
-    android:layout_alignBottom="@+id/buttonCurrPosition"
-    android:layout_alignRight="@+id/map"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentTop="true"
     android:text="Save" />
-
-<Button
-    android:id="@+id/buttonCurrPosition"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_toLeftOf="@+id/buttonSave"
-    android:text="Locate" />
 
 <EditText
     android:id="@+id/editTextLocation"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_alignBottom="@+id/buttonCurrPosition"
-    android:layout_alignLeft="@+id/map"
-    android:layout_alignTop="@+id/buttonCurrPosition"
-    android:layout_toLeftOf="@+id/buttonCurrPosition"
+    android:layout_alignBaseline="@+id/buttonManage"
+    android:layout_alignBottom="@+id/buttonManage"
+    android:layout_toLeftOf="@+id/buttonManage"
     android:ems="10"
     android:inputType="textMultiLine" >
 

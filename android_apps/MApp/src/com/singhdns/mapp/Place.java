@@ -2,11 +2,13 @@ package com.singhdns.mapp;
 
 public class Place {
 	private long id;
-	private String comment = "noComment";
-
-	private String latLng="/";
 	private String date="NULL";	
-	private String otherCommands = "";
+
+	private String comment = "initial_comment";
+
+	private String LatLng = "initial_comment";
+
+	private String OtherCommands = "initial_comment";
 	
 	
 	  public long getId() {
@@ -17,35 +19,39 @@ public class Place {
 	    this.id = id;
 	  }
 
-	  public String getComment() {
+
+	  public String getcomment() {
 	    return comment;
 	  }
 
-	  public void setComment(String comment) {
+	  public void setcomment(String comment) {
 	    this.comment = comment;
 	  }
 
 	  public String getLatLng() {
-	    return latLng;
+	    return LatLng;
 	  }
 
-	  public void setLatLng(String latLng) {
-	    this.latLng = latLng;
+	  public void setLatLng(String LatLng) {
+	    this.LatLng = LatLng;
 	  }
 
 	  public String getOtherCommands() {
-	    return otherCommands;
+	    return OtherCommands;
 	  }
-	  public void setOtherCommands(String otherCommands) {
-		    this.otherCommands = otherCommands;
-		  }
+
+	  public void setOtherCommands(String OtherCommands) {
+	    this.OtherCommands = OtherCommands;
+	  }
+	
+
 	  public String getDate() {
-		    return date;
-		  }	  
+		  return date;
+	  }	  
 	  // Will be used by the ArrayAdapter in the ListView
 	  @Override
 	  public String toString() {
-	    return comment + ":" + latLng;
+	    return comment + ":" + LatLng + ":" + OtherCommands + ":" + date;
 	  }
 	
 	

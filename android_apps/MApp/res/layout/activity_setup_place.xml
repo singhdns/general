@@ -6,63 +6,65 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".SetupDirPairActivity" >
+    tools:context=".SetupPlaceActivity" >
+
+
+
+
 
     <EditText
-        android:id="@+id/editTextComments"
+        android:id="@+id/editTextcomment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/buttonSave"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
+
         android:layout_alignParentTop="true"
+
         android:ems="10"
-        android:inputType="textMultiLine" >
+    />
 
-        <requestFocus />
-    </EditText>
 
-    <Button
-        android:id="@+id/buttonSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:text="Save" />
 
-    <Button
-        android:id="@+id/buttonCancelDataSetup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/buttonSave"
-        android:text="Cancel" />
 
     <EditText
         android:id="@+id/editTextLatLng"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/buttonSave"
-        android:layout_alignRight="@+id/editText1"
-        android:layout_below="@+id/buttonSave"
-        android:ems="10" />
 
-    <EditText
-        android:id="@+id/editTextDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editTextLatLng"
-        android:layout_alignRight="@+id/editTextLatLng"
-        android:layout_below="@+id/editTextLatLng"
-        android:ems="10" />
+        android:layout_below="@+id/editTextcomment"
+
+        android:ems="10"
+    />
+
+
+
 
     <EditText
         android:id="@+id/editTextOtherCommands"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editTextDate"
-        android:layout_alignRight="@+id/editTextDate"
-        android:layout_below="@+id/editTextDate"
-        android:ems="10" />
+
+        android:layout_below="@+id/editTextLatLng"
+
+        android:ems="10"
+    />
+
+
+
+
+    <Button
+        android:id="@+id/Place_buttonSaveItemSetup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editTextOtherCommands"
+        android:layout_alignParentLeft="true"
+        android:text="Save" />
+
+    <Button
+        android:id="@+id/Place_buttonCancelItemSetup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editTextOtherCommands"
+        android:layout_toRightOf="@+id/Place_buttonSaveItemSetup"
+        android:text="Cancel" />
 
 </RelativeLayout>
