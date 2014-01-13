@@ -10,7 +10,7 @@ import android.util.SparseBooleanArray;
 import android.view.Menu;
 
 import java.util.List;
-
+import java.util.ArrayList;
 
 
 import android.view.View;
@@ -42,7 +42,7 @@ public class ManagePlacesActivity extends ListActivity {
 	            //android.R.layout.simple_list_item_multiple_choice, values);
 	            R.layout.simple_list_item_multiple_choice_place, values);
 	    setListAdapter(adapter);
-	    getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE) ;
+	    getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE) ;
    
 	    
 //	    getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -70,41 +70,41 @@ public class ManagePlacesActivity extends ListActivity {
 		    ArrayAdapter adapter = (ArrayAdapter) getListAdapter(); 
 		    
 		    this.currently_clicked_position = position ;
-		    android.util.Log.i("onListItemClicked","a new item is clicked");
-		    switch (view.getId()) {
-		    case R.id.buttonDeleteRecord:
-				        //Put up the Yes/No message box
-				    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				    	builder
-				    	.setTitle("Remove this entry")
-				    	.setMessage("Are you sure?")
-				    	.setIcon(android.R.drawable.ic_dialog_alert)
-				    	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-				    	    public void onClick(DialogInterface dialog, int which) {			      	
-				    	    	//Yes button clicked, do something
-				    	    	deleteEntryWithPosition();
-				    	    }
-				    	})
-				    	.setNegativeButton("No", null)						//Do nothing on no
-				    	.show();    		         
-				      break;
-				      
-		    case R.id.buttonModifyRecord:
-	    	     Toast.makeText(ManagePlacesActivity.this, "Modify is not yet implemented", 
-	                Toast.LENGTH_SHORT).show();	
-		         break;
-
-		    default:
-	    	     Toast.makeText(ManagePlacesActivity.this, "Neither Modify nor Delete clicked", 
-	                Toast.LENGTH_SHORT).show();	
-		         break;		         
-		      
-		    }
-		    
-		    
-		    adapter.notifyDataSetChanged();		  
-		  
-		  
+//		    android.util.Log.i("onListItemClicked","a new item is clicked");
+//		    switch (view.getId()) {
+//		    case R.id.buttonDeleteRecord:
+//				        //Put up the Yes/No message box
+//				    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//				    	builder
+//				    	.setTitle("Remove this entry")
+//				    	.setMessage("Are you sure?")
+//				    	.setIcon(android.R.drawable.ic_dialog_alert)
+//				    	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//				    	    public void onClick(DialogInterface dialog, int which) {			      	
+//				    	    	//Yes button clicked, do something
+//				    	    	deleteEntryWithPosition();
+//				    	    }
+//				    	})
+//				    	.setNegativeButton("No", null)						//Do nothing on no
+//				    	.show();    		         
+//				      break;
+//				      
+//		    case R.id.buttonModifyRecord:
+//	    	     Toast.makeText(ManagePlacesActivity.this, "Modify is not yet implemented", 
+//	                Toast.LENGTH_SHORT).show();	
+//		         break;
+//
+//		    default:
+//	    	     Toast.makeText(ManagePlacesActivity.this, "Neither Modify nor Delete clicked", 
+//	                Toast.LENGTH_SHORT).show();	
+//		         break;		         
+//		      
+//		    }
+//		    
+//		    
+//		    adapter.notifyDataSetChanged();		  
+//		  
+//		  
 	  }
 	  
 	  public void deleteEntryWithPosition() {	
@@ -145,7 +145,9 @@ public class ManagePlacesActivity extends ListActivity {
 	  public void deleteEntry() {	
 		  @SuppressWarnings("unchecked")
 	    	
-	    	ArrayAdapter adapter = (ArrayAdapter) getListAdapter(); 
+	    	  ArrayAdapter adapter = (ArrayAdapter) getListAdapter();
+	          List<Place> lList = new ArrayList<Place>();
+ 
 		  Place item = null;
 		      if (getListAdapter().getCount() > 0) {
 			        //item = (Place) getListAdapter().getItem(0);
@@ -153,10 +155,14 @@ public class ManagePlacesActivity extends ListActivity {
 			    	  SparseBooleanArray checked = getListView().getCheckedItemPositions();
 			    	  for (int i = 0; i < len; i++)
 			    	   if (checked.get(i)) {
-			    	       item = (Place) getListAdapter().getItem(i);
+			    	       item = (Place) adapter.getItem(i);
 			    	       datasource.deletePlace(item);
-			    	       adapter.remove(item);
-			    	   }	    	  
+                                        lList.add(item);
+			    	       //adapter.remove(item);
+			    	   }
+                                 for(int i = 0 ; i < lList.size() ; i++){
+                                       adapter.remove(lList.get(i));
+                                 }	    	  
 			      }	    	    	
 	    	
 	    	Toast.makeText(ManagePlacesActivity.this, "Entry is deleted", 
@@ -165,6 +171,15 @@ public class ManagePlacesActivity extends ListActivity {
 
 	  }
 
+	  public void createTable() {	
+		  //dbHelper = new MySQLiteHelper(this);
+		  //database = dbHelper.getWritableDatabase();
+		  //dbHelper.CreateTablePlaces(database);
+
+	    	Toast.makeText(ManagePlacesActivity.this, "New table is created when you first access the datasource", 
+                         Toast.LENGTH_SHORT).show();	
+
+	  }
 	  public void deleteEntireTable() {	
 		  @SuppressWarnings("unchecked")
 	    	
@@ -204,58 +219,41 @@ public class ManagePlacesActivity extends ListActivity {
 			      
 			      break;
 	    case R.id.delete_Place:
-//			        //Put up the Yes/No message box
-//			    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//			    	builder
-//			    	.setTitle("Remove the selected entry")
-//			    	.setMessage("Are you sure?")
-//			    	.setIcon(android.R.drawable.ic_dialog_alert)
-//			    	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//			    	    public void onClick(DialogInterface dialog, int which) {			      	
-//			    	    	//Yes button clicked, do something
-//			    	    	deleteEntry();
-//			    	    }
-//			    	})
-//			    	.setNegativeButton("No", null)						//Do nothing on no
-//			    	.show();  
-	    	Toast.makeText(ManagePlacesActivity.this, "To delete select the individual list item", 
-	                Toast.LENGTH_SHORT).show();		    	
+			        //Put up the Yes/No message box
+			    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			    	builder
+			    	.setTitle("Remove the selected entry")
+			    	.setMessage("Are you sure?")
+			    	.setIcon(android.R.drawable.ic_dialog_alert)
+			    	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			    	    public void onClick(DialogInterface dialog, int which) {			      	
+			    	    	//Yes button clicked, do something
+			    	    	deleteEntry();
+			    	    }
+			    	})
+			    	.setNegativeButton("No", null)						//Do nothing on no
+			    	.show();  
+	    	//Toast.makeText(ManagePlacesActivity.this, "To delete select the individual list item", 
+	        //        Toast.LENGTH_SHORT).show();		    	
 			      break;
 			      
 	    case R.id.modify_Place:
-	    	
+	    	modifyEntryWithPosition();
 //		      if (getListAdapter().getCount() > 0) {
 //			        //comment = (Comment) getListAdapter().getItem(0);
 //			    	  int len = getListView().getCount();
 //			    	  SparseBooleanArray checked = getListView().getCheckedItemPositions();
 //			    	  for (int i = 0; i < len; i++){
 //				    	   if (checked.get(i)) {
-//				    	       comment = (Comment) getListAdapter().getItem(i);
+//				    	       item = (Place) getListAdapter().getItem(i);
 //
-//							   data = new Intent(this , SetupDirPairActivity.class);
-//							   data.putExtra("old_id", comment.getId());
+//							   data = new Intent(this , SetupPlacesActivity.class);
+//							   data.putExtra("old_id", item.getId());
 //							   startActivityForResult(data,ADD_MODIFY_DATABSE);
 //							   break;
 //				    	   }	
 //			    	  }
 //			  }		    	
-//	    	
-//	        //Put up the Yes/No message box
-//	    	builder = new AlertDialog.Builder(this);
-//	    	builder
-//	    	.setTitle("Remove the entire table")
-//	    	.setMessage("Are you sure?")
-//	    	.setIcon(android.R.drawable.ic_dialog_alert)
-//	    	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//	    	    public void onClick(DialogInterface dialog, int which) {			      	
-//	    	    	//Yes button clicked, do something
-//	    	    	deleteEntireTable();
-//	    	    }
-//	    	})
-//	    	.setNegativeButton("No", null)						//Do nothing on no
-//	    	.show(); 
-    	Toast.makeText(ManagePlacesActivity.this, "Modify is not yet implemented", 
-                Toast.LENGTH_SHORT).show();	
 	      break;
 	      
 	    case R.id.deleteTable_Place:

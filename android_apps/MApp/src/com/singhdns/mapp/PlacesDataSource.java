@@ -31,6 +31,8 @@ public class PlacesDataSource {
 
 	  public void open() throws SQLException {
 	    database = dbHelper.getWritableDatabase();
+	    database = dbHelper.getWritableDatabase();
+	    dbHelper.CreateTablePlaces(database);
 	  }
 
 	  public void close() {
@@ -101,13 +103,13 @@ public class PlacesDataSource {
 	    item.setId(cursor.getLong(0));
 
 
-	    item.setcomment(cursor.getString(0));
+	    item.setcomment(cursor.getString(1));
 
 
-	    item.setLatLng(cursor.getString(1));
+	    item.setLatLng(cursor.getString(2));
 
 
-	    item.setOtherCommands(cursor.getString(2));
+	    item.setOtherCommands(cursor.getString(3));
 
 
 	    return item;

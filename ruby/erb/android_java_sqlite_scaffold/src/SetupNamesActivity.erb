@@ -72,12 +72,12 @@ public class Setup<%= Config_setup["Name"] %>sActivity extends Activity {
 	
 	@Override
 	public void finish() {
+                item = new <%= Config_setup["Name"] %>();
 		
 <% Config_setup["field"].each_key do |key| %>
 		EditText editText<%= key %> = (EditText) findViewById(R.id.editText<%= key %>);
 		item.set<%= key %>(editText<%= key %>.getText().toString()) ;
 <% end %>
-		item = new <%= Config_setup["Name"] %>();
 		<%= Config_setup["Name"] %> new_item = datasource.create<%= Config_setup["Name"] %>(item);
 		
 	  // Prepare data intent 

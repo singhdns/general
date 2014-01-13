@@ -8,38 +8,22 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MappActivity" >
     
-<fragment
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.MapFragment"
+<AutoCompleteTextView
+    android:id="@+id/AutoCompleteTextViewplaceDescr"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@+id/buttonManage" />
-
-<Button
-    android:id="@+id/buttonUnused"
-    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_alignBaseline="@+id/buttonManage"
-    android:layout_alignBottom="@+id/buttonManage"
-    android:layout_alignRight="@+id/map"
-    android:text="NA" />
-
-<Button
-    android:id="@+id/buttonManage"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentTop="true"
-    android:layout_marginTop="66dp"
-    android:layout_toLeftOf="@+id/buttonUnused"
-    android:text="Manage" />
-
-<EditText
-    android:id="@+id/editText1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignBottom="@+id/buttonSave"
     android:layout_alignParentLeft="true"
     android:layout_alignParentTop="true"
+    android:ems="10"
+    android:inputType="textMultiLine" />    
+
+ 
+
+<EditText
+    android:id="@+id/editTextLocation"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/AutoCompleteTextViewplaceDescr"
     android:ems="10"
     android:inputType="textMultiLine" />
 
@@ -47,21 +31,31 @@
     android:id="@+id/buttonSave"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_alignParentRight="true"
-    android:layout_alignParentTop="true"
+    android:layout_below="@+id/editTextLocation"
     android:text="Save" />
-
-<EditText
-    android:id="@+id/editTextLocation"
+ <Button
+    android:id="@+id/buttonManage"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_alignBaseline="@+id/buttonManage"
-    android:layout_alignBottom="@+id/buttonManage"
-    android:layout_toLeftOf="@+id/buttonManage"
-    android:ems="10"
-    android:inputType="textMultiLine" >
+    android:layout_toRightOf="@+id/buttonSave"
+    android:layout_below="@+id/editTextLocation"
+    android:text="Manage" />
+ 
+ <Button
+    android:id="@+id/buttonUnused"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/editTextLocation"
+    android:layout_toRightOf="@+id/buttonManage"
+    android:text="NA" />
+   
+<fragment
+    android:id="@+id/map"
+    android:name="com.google.android.gms.maps.MapFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/buttonManage" />
 
-    <requestFocus />
-</EditText>
+
 
 </RelativeLayout>

@@ -35,7 +35,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	  
           public static final String Places_TABLE_NAME  = "Places";
 	  public void CreateTablePlaces(SQLiteDatabase database) {
-		    database.execSQL(   "create table Places" + "(" 
+		    database.execSQL(   "create table if not exists Places" + "(" 
 		                                                             + COLUMN_ID  + " integer primary key autoincrement, " 
                                                                                  
 		                                                             + "COLUMN_comment  text not null, "
@@ -52,5 +52,4 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	  public void DeleteTablePlace(SQLiteDatabase database) {
 		    database.execSQL("DROP TABLE IF EXISTS Places");
 	  }	  
-	  
 }

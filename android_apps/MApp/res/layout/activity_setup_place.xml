@@ -16,6 +16,7 @@
         android:id="@+id/editTextcomment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:hint="comment"
 
         android:layout_alignParentTop="true"
 
@@ -29,6 +30,7 @@
         android:id="@+id/editTextLatLng"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:hint="LatLng"
 
         android:layout_below="@+id/editTextcomment"
 
@@ -42,6 +44,7 @@
         android:id="@+id/editTextOtherCommands"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:hint="OtherCommands"
 
         android:layout_below="@+id/editTextLatLng"
 

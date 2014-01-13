@@ -1,5 +1,7 @@
 package com.singhdns.mapp;
 
+import java.util.List;
+
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.model.*;
@@ -7,20 +9,83 @@ import com.google.android.gms.maps.model.*;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MappActivity extends Activity {
 	  static final LatLng HAMBURG = new LatLng(53.558, 9.927);
 	  static final LatLng KIEL = new LatLng(53.551, 9.993);
 	  private GoogleMap map;
 	  private EditText locationEditText;
+	  private PlacesDataSource datasource;
+	  private SQLiteDatabase database;
+	  private MySQLiteHelper dbHelper;	  
+	  AutoCompleteTextView autocompletetextview;
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mapp);
 		locationEditText = (EditText) findViewById(R.id.editTextLocation);
+		
+		//String[] array = { "One apple", "Two oranges", "Three beats", "Four bananas", "Five momos", "Six boys", "Seven girls",
+	    //        "Eight", "Nine", "Ten" };
+		
+
+	    datasource = new PlacesDataSource(this);
+	    datasource.open();
+	    List<Place> values = datasource.getAllPlaces();
+		autocompletetextview = (AutoCompleteTextView)     findViewById(R.id.AutoCompleteTextViewplaceDescr);
+        ArrayAdapter<Place> adapter = new ArrayAdapter<Place>(this,
+                android.R.layout.select_dialog_item, values);
+        autocompletetextview.setThreshold(1);
+        autocompletetextview.setAdapter(adapter);
+        datasource.close();
+        
+
+        autocompletetextview.setOnItemClickListener(new OnItemClickListener() {
+           @Override
+           public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
+		    	Toast.makeText(MappActivity.this, "You selected " + autocompletetextview.getText().toString(), 
+                        Toast.LENGTH_SHORT).show();
+           } 
+        });
+
+		Button buttonSave = (Button) findViewById(R.id.buttonSave);
+		buttonSave.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	
+                Place item = new Place();
+		        item.setcomment(autocompletetextview.getText().toString()) ;
+		        item.setLatLng(locationEditText.getText().toString()) ;
+			    datasource.open();
+		        Place new_item = datasource.createPlace(item);
+		        datasource.close();
+		    	Toast.makeText(MappActivity.this, "Location added", 
+                        Toast.LENGTH_SHORT).show();
+            	
+            }
+        });		
+		
+		Button buttonManage = (Button) findViewById(R.id.buttonManage);
+		buttonManage.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+			      Intent data = new Intent(MappActivity.this , ManagePlacesActivity.class);
+			      //data.putExtra("comment", currentDir);
+			      startActivity(data);
+            	
+            }
+        });
+		
 	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
 	            .getMap();
 	    map.setMyLocationEnabled(true);

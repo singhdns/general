@@ -80,6 +80,7 @@ public class SetupPlacesActivity extends Activity {
 	
 	@Override
 	public void finish() {
+                item = new Place();
 		
 
 		EditText editTextcomment = (EditText) findViewById(R.id.editTextcomment);
@@ -91,7 +92,6 @@ public class SetupPlacesActivity extends Activity {
 		EditText editTextOtherCommands = (EditText) findViewById(R.id.editTextOtherCommands);
 		item.setOtherCommands(editTextOtherCommands.getText().toString()) ;
 
-		item = new Place();
 		Place new_item = datasource.createPlace(item);
 		
 	  // Prepare data intent 

@@ -51,7 +51,7 @@ public class Place {
 	  // Will be used by the ArrayAdapter in the ListView
 	  @Override
 	  public String toString() {
-	    return comment + ":" + LatLng + ":" + OtherCommands + ":" + date;
+	    return comment + ": " + LatLng + ": " + OtherCommands + ":" + date;
 	  }
 	
 	

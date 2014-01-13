@@ -27,6 +27,8 @@ public class <%= Config_setup["Name"] %>sDataSource {
 
 	  public void open() throws SQLException {
 	    database = dbHelper.getWritableDatabase();
+	    database = dbHelper.getWritableDatabase();
+	    dbHelper.CreateTable<%= Config_setup["Name"] %>s(database);
 	  }
 
 	  public void close() {
@@ -91,7 +93,7 @@ public class <%= Config_setup["Name"] %>sDataSource {
 	  private <%= Config_setup["Name"] %> cursorTo<%= Config_setup["Name"] %>(Cursor cursor) {
 	    <%= Config_setup["Name"] %> item = new <%= Config_setup["Name"] %>();
 	    item.setId(cursor.getLong(0));
-<% i = 0 %>
+<% i = 1 %>
 <% Config_setup["field"].each_key do |key| %>
 	    item.set<%= key %>(cursor.getString(<%= i%>));
 <% i = i + 1 %>
