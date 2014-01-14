@@ -14,6 +14,7 @@
     android:layout_height="wrap_content"
     android:layout_alignParentLeft="true"
     android:layout_alignParentTop="true"
+    android:dropDownHeight="wrap_content"
     android:ems="10"
     android:inputType="textMultiLine" />    
 
@@ -42,12 +43,12 @@
     android:text="Manage" />
  
  <Button
-    android:id="@+id/buttonUnused"
+    android:id="@+id/buttonGo"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_below="@+id/editTextLocation"
     android:layout_toRightOf="@+id/buttonManage"
-    android:text="NA" />
+    android:text="Go" />
    
 <fragment
     android:id="@+id/map"

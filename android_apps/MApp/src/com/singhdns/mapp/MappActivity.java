@@ -6,9 +6,11 @@ import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.model.*;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.Menu;
@@ -29,6 +31,7 @@ public class MappActivity extends Activity {
 	  private PlacesDataSource datasource;
 	  private SQLiteDatabase database;
 	  private MySQLiteHelper dbHelper;	  
+      View map_frag  ;
 	  AutoCompleteTextView autocompletetextview;
 	@SuppressLint("NewApi")
 	@Override
@@ -40,7 +43,7 @@ public class MappActivity extends Activity {
 		//String[] array = { "One apple", "Two oranges", "Three beats", "Four bananas", "Five momos", "Six boys", "Seven girls",
 	    //        "Eight", "Nine", "Ten" };
 		
-
+	    map_frag = (View) findViewById(R.id.map) ;
 	    datasource = new PlacesDataSource(this);
 	    datasource.open();
 	    List<Place> values = datasource.getAllPlaces();
@@ -55,8 +58,23 @@ public class MappActivity extends Activity {
         autocompletetextview.setOnItemClickListener(new OnItemClickListener() {
            @Override
            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg) {
-		    	Toast.makeText(MappActivity.this, "You selected " + autocompletetextview.getText().toString(), 
-                        Toast.LENGTH_SHORT).show();
+		    	//Toast.makeText(MappActivity.this, "You selected " + autocompletetextview.getText().toString(), 
+                //        Toast.LENGTH_SHORT).show();
+        	   Place item = (Place) adapter.getItemAtPosition(position);
+        	   String lat = item.getLatLng().replaceFirst(".*\\(", "").replaceFirst(",.*", "");
+        	   String lng = item.getLatLng().replaceFirst(".*\\(", "").replaceFirst(".*,", "").replaceFirst("\\).*", "");
+		    	Toast.makeText(MappActivity.this, "You selected lat=" + lat + "  lng=" + lng, 
+                        Toast.LENGTH_SHORT).show();		
+		    	LatLng curr_position = new LatLng(Float.parseFloat(lat), Float.parseFloat(lng)) ;
+		        Marker marker = map.addMarker(new MarkerOptions()
+	            .position(curr_position)
+	            .title("selected")
+	            .snippet("this is my new location")
+	            .icon(BitmapDescriptorFactory
+	                .fromResource(R.drawable.ic_launcher)));
+
+	           // Move the camera instantly to hamburg with a zoom of 15.
+	           map.moveCamera(CameraUpdateFactory.newLatLngZoom(curr_position, 15));
            } 
         });
 
@@ -86,6 +104,19 @@ public class MappActivity extends Activity {
             }
         });
 		
+		Button buttonGo = (Button) findViewById(R.id.buttonGo);
+		buttonGo.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	  
+            	  String lat = autocompletetextview.getText().toString().replaceFirst(".*\\(", "").replaceFirst(",.*", "");
+        	      String lng = autocompletetextview.getText().toString().replaceFirst(".*\\(", "").replaceFirst(".*,", "").replaceFirst("\\).*", "");
+		    	
+			      Intent intent = new Intent(android.content.Intent.ACTION_VIEW, 
+			    		  Uri.parse("geo:0,0?q=" + lat + "," + lng + "(\"Your location\")"));
+			      startActivity(intent);
+            	
+            }
+        });		
 	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
 	            .getMap();
 	    map.setMyLocationEnabled(true);
@@ -113,7 +144,8 @@ public class MappActivity extends Activity {
 	                // TODO Auto-generated method stub
 	            }
 	        });
-		
+	       
+	       
 	}
 
 	@Override
