@@ -9,23 +9,48 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
+import java.util.ArrayList;
+import android.widget.AutoCompleteTextView;
+import android.widget.ArrayAdapter;
+
 
 public class Setup<%= Config_setup["Name"] %>sActivity extends Activity {
 	private <%= Config_setup["Name"] %>sDataSource datasource;
 	private <%= Config_setup["Name"] %> item = null;
 	private String request_type = "add" ;
-	
+                  <% Config_setup["field"].each_key do |key| %>
+                  <% if Config_setup["field"][key]["values"] %>
+          AutoCompleteTextView autocompletetextview_<%= key %>;
+                  <% end %>
+                  <% end %>	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_setup_<%= Config_setup["Name"].downcase %>);
+
+        //any key which has values
+
+                  <% Config_setup["field"].each_key do |key| %>
+                  <% if Config_setup["field"][key]["values"] %>
+ 
+            ArrayList<String> values_<%= key %> = new ArrayList<String>();
+                  <% Config_setup["field"][key]["values"].each do |value| %>
+            values_<%= key %>.add("<%= value %>");
+                  <% end %>
+	    autocompletetextview_<%= key %> = (AutoCompleteTextView)     findViewById(R.id.editText<%= key %>);
+            ArrayAdapter<String> adapter_<%= key %> = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item, values_<%= key %>);
+            autocompletetextview_<%= key %>.setThreshold(1);
+            autocompletetextview_<%= key %>.setAdapter(adapter_<%= key %>);
+                  <% end %>
+                  <% end %>
+        // values keys end here
 
 
 		Button buttonSave = (Button) findViewById(R.id.<%= Config_setup["Name"] %>_buttonSaveItemSetup);
 		buttonSave.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                  
-            	finish();
+            	saveButtonClicked();
             }
         });		
 
@@ -68,7 +93,9 @@ public class Setup<%= Config_setup["Name"] %>sActivity extends Activity {
 		
 	}
 	
-	
+	public void saveButtonClicked() {
+               finish();
+        }
 	
 	@Override
 	public void finish() {
@@ -76,7 +103,11 @@ public class Setup<%= Config_setup["Name"] %>sActivity extends Activity {
 		
 <% Config_setup["field"].each_key do |key| %>
 		EditText editText<%= key %> = (EditText) findViewById(R.id.editText<%= key %>);
+<% if Config_setup["field"][key]["type"] == "String" %>
 		item.set<%= key %>(editText<%= key %>.getText().toString()) ;
+<% else %>
+		item.set<%= key %>(Integer.valueOf(editText<%= key %>.getText().toString())) ;
+<% end %>
 <% end %>
 		<%= Config_setup["Name"] %> new_item = datasource.create<%= Config_setup["Name"] %>(item);
 		

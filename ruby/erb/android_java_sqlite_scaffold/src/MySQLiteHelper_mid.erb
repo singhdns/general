@@ -3,7 +3,7 @@
 		    database.execSQL(   "create table if not exists <%= Config_setup["Name"] %>s" + "(" 
 		                                                             + COLUMN_ID  + " integer primary key autoincrement, " 
                                                                                  <% Config_setup["field"].each_key do |key| %>
-		                                                             + "COLUMN_<%= key %>  text not null, "
+		                                                             + "COLUMN_<%= key %>  <%= Config_setup["field"][key]["type"] == "int" ? "integer" : "text" %> not null, "
                                                                                  <% end %>
 	                                                                     + COLUMN_DATE + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL"
 	                                                               + ");"

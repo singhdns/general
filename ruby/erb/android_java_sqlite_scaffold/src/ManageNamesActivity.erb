@@ -19,7 +19,7 @@ import android.net.Uri ;
 import android.os.Environment;
 import java.io.FileWriter;
 import au.com.bytecode.opencsv.CSVWriter;
-
+import android.widget.AutoCompleteTextView;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -48,6 +48,7 @@ public class Manage<%= Config_setup["Name"] %>sActivity extends ListActivity {
 	  public static final String TABLE_NAME       = "<%= Config_setup["Name"] %>s";
 	  private static int ADD_MODIFY_DATABSE = 101 ;
 	  public int currently_clicked_position ;
+
 	  @Override
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -56,7 +57,7 @@ public class Manage<%= Config_setup["Name"] %>sActivity extends ListActivity {
 	    datasource = new <%= Config_setup["Name"] %>sDataSource(this);
 	    datasource.open();
 
-	    List<<%= Config_setup["Name"] %>> values = datasource.getAllPlaces();
+	    List<<%= Config_setup["Name"] %>> values = datasource.getAll<%= Config_setup["Name"] %>s();
 
 	    // use the SimpleCursorAdapter to show the
 	    // elements in a ListView
@@ -133,13 +134,13 @@ public class Manage<%= Config_setup["Name"] %>sActivity extends ListActivity {
 		  
 		  @SuppressWarnings("unchecked")
 	    	ArrayAdapter adapter = (ArrayAdapter) getListAdapter(); 
-		  Place place = null;
+		  <%= Config_setup["Name"] %> item = null;
 		      if (getListAdapter().getCount() > 0) {
 
-			    	       place = (Place) getListAdapter().getItem(this.currently_clicked_position);
+			    	       item = (<%= Config_setup["Name"] %>) getListAdapter().getItem(this.currently_clicked_position);
 			    	       datasource.open() ;
-			    	       datasource.deletePlace(place);
-			    	       adapter.remove(place);
+			    	       datasource.delete<%= Config_setup["Name"] %>(item);
+			    	       adapter.remove(item);
 			    	      	  
 			  }	    	    	
 	    	
@@ -465,7 +466,11 @@ public class Manage<%= Config_setup["Name"] %>sActivity extends ListActivity {
                                         
                                                  Row=doc.createElement("Row");
                   <% Config_setup["field"].each_key do |key| %>
+                  <% if Config_setup["field"][key]["type"] == "String" %>
                                                  Row.setAttribute("<%= key %>", values.get(i).get<%= key %>());
+                  <% else %>
+                                                 Row.setAttribute("<%= key %>", String.valueOf(values.get(i).get<%= key %>()));
+                  <% end %>
                   <% end %>
                                                  rootElement.appendChild(Row);
                                         }
@@ -500,7 +505,11 @@ public class Manage<%= Config_setup["Name"] %>sActivity extends ListActivity {
                                   data.add(new String[] {
                   <% counter = 0 ; %>                      
                   <% Config_setup["field"].each_key do |key| %>
+                  <% if Config_setup["field"][key]["type"] == "String" %>
                                              <%= "," unless counter == 0 %>    values.get(i).get<%= key %>()
+                  <% else %>
+                                             <%= "," unless counter == 0 %>    String.valueOf(values.get(i).get<%= key %>())
+                  <% end %>
                   <% counter = counter + 1 ; %>
                   <% end %>
                                          });

@@ -1,5 +1,6 @@
 require 'erb'
-require_relative 'setups/Place'
+require_relative 'setups/Expense'
+#require_relative 'setups/Place'
 
 template_file = File.open("./src/Name.erb", 'r').read
 erb = ERB.new(template_file)

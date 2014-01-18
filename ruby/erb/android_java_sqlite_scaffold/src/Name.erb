@@ -4,7 +4,11 @@ public class <%= Config_setup["Name"] %> {
 	private long id;
 	private String date;	
 <% Config_setup["field"].each_key do |key| %>
+<% if Config_setup["field"][key]["type"] == "String" %>
 	private <%= Config_setup["field"][key]["type"] %> <%= key %> = "<%= Config_setup["field"][key]["default"]%>";
+<% else %>
+	private <%= Config_setup["field"][key]["type"] %> <%= key %> = <%= Config_setup["field"][key]["default"]%>;
+<% end %>
 <% end %>	
 	
 	  public long getId() {
@@ -20,7 +24,7 @@ public class <%= Config_setup["Name"] %> {
 	    return <%= key %>;
 	  }
 
-	  public void set<%= key %>(String <%= key %>) {
+	  public void set<%= key %>(<%= Config_setup["field"][key]["type"] %> <%= key %>) {
 	    this.<%= key %> = <%= key %>;
 	  }
 <% end %>	

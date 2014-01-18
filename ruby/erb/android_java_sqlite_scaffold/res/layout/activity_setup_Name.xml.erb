@@ -12,7 +12,11 @@
 <% prev_field_id = "dummy_field_id"  %>
 <% Config_setup["field"].each_key do |key| %>
 <% field_id = "editText"+key  %>
+<% if Config_setup["field"][key]["values"] %>
+    <AutoCompleteTextView
+<% else %>
     <EditText
+<% end %>
         android:id="@+id/editText<%= key %>"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,6 +27,9 @@
         android:layout_alignParentTop="true"
 <% end %>
         android:ems="10"
+<% if Config_setup["field"][key]["inputType"] %>
+        android:inputType="<%= Config_setup["field"][key]["inputType"] %>"
+<% end %>
     />
 <% prev_field_id = field_id  %>
 <% field_counter = field_counter + 1  %>

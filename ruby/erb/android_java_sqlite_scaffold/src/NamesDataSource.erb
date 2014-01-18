@@ -53,7 +53,7 @@ public class <%= Config_setup["Name"] %>sDataSource {
 	    return newItem;
 	  }
 
-	  public Place get<%= Config_setup["Name"] %>Object(long id) {
+	  public <%= Config_setup["Name"] %> get<%= Config_setup["Name"] %>Object(long id) {
 		    System.out.println("getting comment object corresponding to id: " + id);
 		    android.util.Log.i("<%= Config_setup["Name"] %>sDataSource","getting comment object corresponding to comment id");      
 		    Cursor cursor = database.query(MySQLiteHelper.<%= Config_setup["Name"] %>s_TABLE_NAME,
@@ -73,7 +73,7 @@ public class <%= Config_setup["Name"] %>sDataSource {
 	        + " = " + id, null);
 	  }
 
-	  public List<Place> getAll<%= Config_setup["Name"] %>s() {
+	  public List<<%= Config_setup["Name"] %>> getAll<%= Config_setup["Name"] %>s() {
 	    List<<%= Config_setup["Name"] %>> items = new ArrayList<<%= Config_setup["Name"] %>>();
 
 	    Cursor cursor = database.query(MySQLiteHelper.<%= Config_setup["Name"] %>s_TABLE_NAME,
@@ -95,7 +95,7 @@ public class <%= Config_setup["Name"] %>sDataSource {
 	    item.setId(cursor.getLong(0));
 <% i = 1 %>
 <% Config_setup["field"].each_key do |key| %>
-	    item.set<%= key %>(cursor.getString(<%= i%>));
+	    item.set<%= key %>(cursor.get<%= Config_setup["field"][key]["type"] == "int" ? "Int" : Config_setup["field"][key]["type"]%>(<%= i%>));
 <% i = i + 1 %>
 <% end %>
 	    item.setDate(cursor.getString(<%= i%>));
