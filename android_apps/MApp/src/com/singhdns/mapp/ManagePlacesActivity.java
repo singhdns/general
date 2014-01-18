@@ -8,10 +8,32 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
-
+import java.io.FileOutputStream ;
+import java.io.File;
+import java.io.IOException;
+import java.io.FileInputStream ;
+import java.io.OutputStreamWriter ;
 import java.util.List;
 import java.util.ArrayList;
+import android.net.Uri ;
+import android.os.Environment;
+import java.io.FileWriter;
+import au.com.bytecode.opencsv.CSVWriter;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
+import org.w3c.dom.NodeList;
 
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -236,7 +258,98 @@ public class ManagePlacesActivity extends ListActivity {
 	    	//Toast.makeText(ManagePlacesActivity.this, "To delete select the individual list item", 
 	        //        Toast.LENGTH_SHORT).show();		    	
 			      break;
-			      
+	    case R.id.exportTable_Place:
+			        //Put up the Yes/No message box
+			    	builder = new AlertDialog.Builder(this);
+			    	builder
+			    	.setTitle("Export the table")
+			    	.setMessage("Are you sure?")
+			    	.setIcon(android.R.drawable.ic_dialog_alert)
+			    	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			    	    public void onClick(DialogInterface dialog, int which) {			      	
+			    	    	//Yes button clicked, do something
+			    	    	export_import_xml("export","xml");
+			    	    }
+			    	})
+			    	.setNegativeButton("No", null)						//Do nothing on no
+			    	.show();  
+	    	//Toast.makeText(ManagePlacesActivity.this, "To delete select the individual list item", 
+	        //        Toast.LENGTH_SHORT).show();		    	
+			      break;
+	    case R.id.exportTable_Place_csv:
+			        //Put up the Yes/No message box
+			    	builder = new AlertDialog.Builder(this);
+			    	builder
+			    	.setTitle("Export the table in csv format")
+			    	.setMessage("Are you sure?")
+			    	.setIcon(android.R.drawable.ic_dialog_alert)
+			    	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			    	    public void onClick(DialogInterface dialog, int which) {			      	
+			    	    	//Yes button clicked, do something
+			    	    	export_import_xml("export","csv");
+			    	    }
+			    	})
+			    	.setNegativeButton("No", null)						//Do nothing on no
+			    	.show();  
+	    	//Toast.makeText(ManagePlacesActivity.this, "To delete select the individual list item", 
+	        //        Toast.LENGTH_SHORT).show();		    	
+			      break;
+
+	    case R.id.importTable_Place:
+			        //Put up the Yes/No message box
+			    	builder = new AlertDialog.Builder(this);
+			    	builder
+			    	.setTitle("Import the table")
+			    	.setMessage("Are you sure?")
+			    	.setIcon(android.R.drawable.ic_dialog_alert)
+			    	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			    	    public void onClick(DialogInterface dialog, int which) {			      	
+			    	    	//Yes button clicked, do something
+			    	    	export_import_xml("import","xml");
+			    	    }
+			    	})
+			    	.setNegativeButton("No", null)						//Do nothing on no
+			    	.show();  
+	    	//Toast.makeText(ManagePlacesActivity.this, "To delete select the individual list item", 
+	        //        Toast.LENGTH_SHORT).show();		    	
+			      break;
+
+	    case R.id.shareTable_Place:
+			        //Put up the Yes/No message box
+			    	builder = new AlertDialog.Builder(this);
+			    	builder
+			    	.setTitle("Share the table data")
+			    	.setMessage("Are you sure?")
+			    	.setIcon(android.R.drawable.ic_dialog_alert)
+			    	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			    	    public void onClick(DialogInterface dialog, int which) {			      	
+			    	    	//Yes button clicked, do something
+			    	    	share_exported_table("NULL","xml");
+			    	    }
+			    	})
+			    	.setNegativeButton("No", null)						//Do nothing on no
+			    	.show();  
+	    	//Toast.makeText(ManagePlacesActivity.this, "To delete select the individual list item", 
+	        //        Toast.LENGTH_SHORT).show();		    	
+			      break;
+	    case R.id.shareTable_Place_csv:
+			        //Put up the Yes/No message box
+			    	builder = new AlertDialog.Builder(this);
+			    	builder
+			    	.setTitle("Share the table data in csv")
+			    	.setMessage("Are you sure?")
+			    	.setIcon(android.R.drawable.ic_dialog_alert)
+			    	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			    	    public void onClick(DialogInterface dialog, int which) {			      	
+			    	    	//Yes button clicked, do something
+			    	    	share_exported_table("NULL","csv");
+			    	    }
+			    	})
+			    	.setNegativeButton("No", null)						//Do nothing on no
+			    	.show();  
+	    	//Toast.makeText(ManagePlacesActivity.this, "To delete select the individual list item", 
+	        //        Toast.LENGTH_SHORT).show();		    	
+			      break;			      
 	    case R.id.modify_Place:
 	    	modifyEntryWithPosition();
 //		      if (getListAdapter().getCount() > 0) {
@@ -324,7 +437,124 @@ public class ManagePlacesActivity extends ListActivity {
 	public void finish() {
 	  datasource.close();
 	  super.finish();
-	} 
+	}
+        
+        public String[] export_import_xml(String action , String format){
+              try{
+                      File path = Environment.getExternalStoragePublicDirectory( Environment. DIRECTORY_DOWNLOADS);
+                      String[] return_info;
+                      if ( format.equals("xml")){
+                                  File file = new File(path, "myPlaces.xml");
+                                 
+                                  DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+                                  DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+                                  Document doc;
+                                  return_info= new String[] {path + "/myPlaces.xml","yes"};
+                                  if ( action.equals("export")){
+                                        doc = docBuilder.newDocument();
+                  
+                  	                    datasource = new PlacesDataSource(this);
+                  	                    datasource.open();
+                  	                    List<Place> values = datasource.getAllPlaces();
+                                        datasource.close();
+                                        Element Row;
+                                        int i ;
+                                        Element rootElement = doc.createElement("records");
+                  		            doc.appendChild(rootElement);
+                                        for(i=0 ; i < values.size() ; i++){
+                                        
+                                                 Row=doc.createElement("Row");
+                  
+                                                 Row.setAttribute("comment", values.get(i).getcomment());
+                  
+                                                 Row.setAttribute("LatLng", values.get(i).getLatLng());
+                  
+                                                 Row.setAttribute("OtherCommands", values.get(i).getOtherCommands());
+                  
+                                                 rootElement.appendChild(Row);
+                                        }
+                                        //write the content into xml file
+                                        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                                        Transformer transformer = transformerFactory.newTransformer();
+                                        DOMSource source = new DOMSource(doc);
+                                        StreamResult result =  new StreamResult(file);
+                                        transformer.transform(source, result);
+                                        Toast.makeText(ManagePlacesActivity.this, "Exported " + i + " records", 
+                                              Toast.LENGTH_SHORT).show();
+                                  }else if(action.equals("import")){
+                                        doc = docBuilder.parse(file);
+                                        NodeList nodeList = doc.getElementsByTagName("Row");
+                                        Toast.makeText(ManagePlacesActivity.this, "Imported " + nodeList.getLength() + " records::: " + nodeList.toString(), 
+                                              Toast.LENGTH_SHORT).show();
+                                        
+                                  }else{
+                                  }
+                      }else{ // it is csv format
+                                  File file = new File(path, "myPlaces.csv");
+                                  return_info= new String[] {path + "/myPlaces.csv","yes"};
+                                  CSVWriter writer = new CSVWriter(new FileWriter(file));
+
+                                  List<String[]> data = new ArrayList<String[]>();
+                                  datasource = new PlacesDataSource(this);
+                  	          datasource.open();
+                  	          List<Place> values = datasource.getAllPlaces();
+                                  datasource.close();
+                                  int i ;
+                                  for(i=0 ; i < values.size() ; i++){
+                                  data.add(new String[] {
+                                        
+                  
+                                                 values.get(i).getcomment()
+                  
+                  
+                                             ,    values.get(i).getLatLng()
+                  
+                  
+                                             ,    values.get(i).getOtherCommands()
+                  
+                  
+                                         });
+                                 }
+                                  writer.writeAll(data);
+                                  writer.close();
+                                  Toast.makeText(ManagePlacesActivity.this, "Exported " + i + " records", 
+                                              Toast.LENGTH_SHORT).show();
+                      }
+                      return return_info ;
+              
+              }catch(ParserConfigurationException pce){
+                   pce.printStackTrace();
+              }catch(TransformerException tfe){
+                   tfe.printStackTrace();
+              }catch(IOException ioe){
+                   ioe.printStackTrace();
+              }catch(SAXException sae){
+                   sae.printStackTrace();
+              }
+              return new String[] {"",""};
+      }
+         public void share_exported_table(String action, String format){
+                      String[] file_path_string = export_import_xml("NULL",format);
+                      File file = new File(file_path_string[0]);
+
+                      if ( file.exists()){
+                      }else{
+                            file_path_string = export_import_xml("export",format);
+                      }
+                      Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"singhdns@gmail.com"});
+            i.putExtra(Intent.EXTRA_SUBJECT, "myPlaces");
+            i.putExtra(Intent.EXTRA_TEXT   , "myPlaces");
+            i.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + file_path_string[0]));
+            try {
+                startActivity(Intent.createChooser(i, "Send mail..."));
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(ManagePlacesActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+            }
+              
+      }
+
 }
 
 

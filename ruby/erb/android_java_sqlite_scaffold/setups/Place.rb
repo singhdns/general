@@ -19,6 +19,7 @@ Config_setup["field"]["OtherCommands"] = Hash.new
 Config_setup["field"]["OtherCommands"]["type"] = "String"
 Config_setup["field"]["OtherCommands"]["default"] = "initial_comment"
 
-Config_setup["string_value"] = "comment + \": \" + LatLng + \": \" + OtherCommands"
+Config_setup["string_value"] = "comment"
+#Config_setup["string_value"] = "comment + \": \" + LatLng + \": \" + OtherCommands"
 
 

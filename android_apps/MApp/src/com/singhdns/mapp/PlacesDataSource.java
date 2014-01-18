@@ -112,6 +112,7 @@ public class PlacesDataSource {
 	    item.setOtherCommands(cursor.getString(3));
 
 
+	    item.setDate(cursor.getString(4));
 	    return item;
 	  }
 	

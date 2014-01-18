@@ -43,6 +43,41 @@
             android:text="NewTbl" 
             android:onClick="onClick"/>         
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+        <Button
+            android:id="@+id/exportTable_Place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Export" 
+            android:onClick="onClick"/>         
+        <Button
+            android:id="@+id/exportTable_Place_csv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ExpCSV" 
+            android:onClick="onClick"/>         
+        <Button
+            android:id="@+id/importTable_Place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Imprt" 
+            android:onClick="onClick"/>         
+        <Button
+            android:id="@+id/shareTable_Place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Share" 
+            android:onClick="onClick"/>         
+        <Button
+            android:id="@+id/shareTable_Place_csv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ShaCSV" 
+            android:onClick="onClick"/>         
+    </LinearLayout>
 
     <ListView
         android:id="@android:id/list"

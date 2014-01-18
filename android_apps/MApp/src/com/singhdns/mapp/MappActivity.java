@@ -9,10 +9,11 @@ import com.google.android.gms.maps.model.*;
 import android.net.Uri;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.Fragment;
+//import android.app.Activity;
+//import android.app.Fragment;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,9 +24,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MappActivity extends Activity {
-	  static final LatLng HAMBURG = new LatLng(53.558, 9.927);
-	  static final LatLng KIEL = new LatLng(53.551, 9.993);
+public class MappActivity extends FragmentActivity {
+
 	  private GoogleMap map;
 	  private EditText locationEditText;
 	  private PlacesDataSource datasource;
@@ -50,6 +50,7 @@ public class MappActivity extends Activity {
 		autocompletetextview = (AutoCompleteTextView)     findViewById(R.id.AutoCompleteTextViewplaceDescr);
         ArrayAdapter<Place> adapter = new ArrayAdapter<Place>(this,
                 android.R.layout.select_dialog_item, values);
+        
         autocompletetextview.setThreshold(1);
         autocompletetextview.setAdapter(adapter);
         datasource.close();
@@ -63,6 +64,7 @@ public class MappActivity extends Activity {
         	   Place item = (Place) adapter.getItemAtPosition(position);
         	   String lat = item.getLatLng().replaceFirst(".*\\(", "").replaceFirst(",.*", "");
         	   String lng = item.getLatLng().replaceFirst(".*\\(", "").replaceFirst(".*,", "").replaceFirst("\\).*", "");
+        	   locationEditText.setText(lat + ":" + lng);
 		    	Toast.makeText(MappActivity.this, "You selected lat=" + lat + "  lng=" + lng, 
                         Toast.LENGTH_SHORT).show();		
 		    	LatLng curr_position = new LatLng(Float.parseFloat(lat), Float.parseFloat(lng)) ;
@@ -75,6 +77,7 @@ public class MappActivity extends Activity {
 
 	           // Move the camera instantly to hamburg with a zoom of 15.
 	           map.moveCamera(CameraUpdateFactory.newLatLngZoom(curr_position, 15));
+	           
            } 
         });
 
@@ -108,30 +111,27 @@ public class MappActivity extends Activity {
 		buttonGo.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	  
-            	  String lat = autocompletetextview.getText().toString().replaceFirst(".*\\(", "").replaceFirst(",.*", "");
-        	      String lng = autocompletetextview.getText().toString().replaceFirst(".*\\(", "").replaceFirst(".*,", "").replaceFirst("\\).*", "");
+            	  String lat = locationEditText.getText().toString().replaceFirst(":.*", "");
+        	      String lng = locationEditText.getText().toString().replaceFirst(".*:", "");
 		    	
 			      Intent intent = new Intent(android.content.Intent.ACTION_VIEW, 
-			    		  Uri.parse("geo:0,0?q=" + lat + "," + lng + "(\"Your location\")"));
+			    		  Uri.parse("geo:0,0?q=" + lat + "," + lng + "(\"Your desired location\")"));
 			      startActivity(intent);
             	
             }
         });		
-	    map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
+	    map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
 	            .getMap();
 	    map.setMyLocationEnabled(true);
 	    
-	        Marker hamburg = map.addMarker(new MarkerOptions().position(HAMBURG)
-	            .title("Hamburg"));
-	        Marker kiel = map.addMarker(new MarkerOptions()
-	            .position(KIEL)
-	            .title("Kiel")
-	            .snippet("Kiel is cool")
-	            .icon(BitmapDescriptorFactory
-	                .fromResource(R.drawable.ic_launcher)));
 
-	        // Move the camera instantly to hamburg with a zoom of 15.
-	        map.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 15));
+	        //Marker kiel = map.addMarker(new MarkerOptions()
+	        //    .position(KIEL)
+	        //    .title("Kiel")
+	        //    .snippet("Kiel is cool")
+	        //    .icon(BitmapDescriptorFactory
+	        //        .fromResource(R.drawable.ic_launcher)));
+	        //map.moveCamera(CameraUpdateFactory.newLatLngZoom(HAMBURG, 15));
 
 	        // Zoom in, animating the camera.
 	        map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);		

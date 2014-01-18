@@ -98,6 +98,7 @@ public class <%= Config_setup["Name"] %>sDataSource {
 	    item.set<%= key %>(cursor.getString(<%= i%>));
 <% i = i + 1 %>
 <% end %>
+	    item.setDate(cursor.getString(<%= i%>));
 	    return item;
 	  }
 	

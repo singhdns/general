@@ -2,7 +2,7 @@ package com.singhdns.mapp;
 
 public class Place {
 	private long id;
-	private String date="NULL";	
+	private String date;	
 
 	private String comment = "initial_comment";
 
@@ -48,10 +48,13 @@ public class Place {
 	  public String getDate() {
 		  return date;
 	  }	  
+	  public void setDate(String date) {
+		  this.date = date;
+	  }	  
 	  // Will be used by the ArrayAdapter in the ListView
 	  @Override
 	  public String toString() {
-	    return comment + ": " + LatLng + ": " + OtherCommands + ":" + date;
+	    return comment + " :::" + date;
 	  }
 	
 	
