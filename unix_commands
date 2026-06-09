@@ -1,0 +1,2 @@
+Open a python pickled file,
+/data/bgqa/scripts/pyvirtualenvs/rhel8/common/bin/python -c "import pickle, sys; print(pickle.load(open(sys.argv[1], 'rb')))" <file_path>
